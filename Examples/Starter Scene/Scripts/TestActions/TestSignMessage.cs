@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Text.Json;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class TestSignMessage : MonoBehaviour
     {
@@ -14,13 +14,13 @@ namespace Tezos.StarterSample
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private TMP_InputField _inputField;
 
-        private void OnEnable()
+        private void Start()
         {
             _button.onClick.AddListener(OnSignMessageButtonClicked);
             TezosManager.Instance.MessageReceiver.PayloadSigned += OnMessageSigned;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _button.onClick.RemoveListener(OnSignMessageButtonClicked);
             TezosManager.Instance.MessageReceiver.PayloadSigned -= OnMessageSigned;

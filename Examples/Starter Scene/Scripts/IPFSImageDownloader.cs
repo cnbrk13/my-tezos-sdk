@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class IPFSImageDownloader
     {

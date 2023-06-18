@@ -4,31 +4,25 @@ using TMPro;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class TestGetNFTs : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private Button _button;
+        [SerializeField] private TextMeshProUGUI _contractAddressText;
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private RectTransform _trContent;
         [SerializeField] private GameObject _nftElementPrefab;
-        [Header("Properties")]
-        [SerializeField] private string _contractAddress = "KT1WguzxyLmuKbJhz3jNuoRzzaUCncfp6PFE";
         
-        private void OnEnable()
+        private void Start()
         {
             _button.onClick.AddListener(OnGetNFTsButtonClicked);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _button.onClick.RemoveListener(OnGetNFTsButtonClicked);
-        }
-        
-        public void ChangeNFTContractAddress(string newAddress)
-        {
-            _contractAddress = newAddress;
         }
         
         private void OnGetNFTsButtonClicked()
@@ -45,21 +39,20 @@ namespace Tezos.StarterSample
 
             const string entrypoint = "view_items_of";
             var input = new { @string = activeWalletAddress };
-
+            string contractAddress = _contractAddressText.text;
             CoroutineRunner.Instance.StartWrappedCoroutine(
                 TezosManager.Instance.API.ReadView(
-                    contractAddress: _contractAddress,
+                    contractAddress: contractAddress,
                     entrypoint: entrypoint,
                     input: input,
                     callback: result =>
                     {
-                        Debug.Log(result);
                         // Deserialize the json data to inventory items
                         CoroutineRunner.Instance.StartWrappedCoroutine(
                             NetezosExtensions.HumanizeValue(
                                 val: result,
                                 rpcUri: TezosConfig.Instance.RpcBaseUrl,
-                                destination: _contractAddress,
+                                destination: contractAddress,
                                 humanizeEntrypoint: "humanizeInventory",
                                 onComplete: (NFTData[] inventory) =>
                                     OnInventoryFetched(inventory))

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class TestGetLatestBlockLevel : MonoBehaviour
     {
@@ -10,12 +10,12 @@ namespace Tezos.StarterSample
         [SerializeField] private Button _button;
         [SerializeField] private TextMeshProUGUI _resultText;
 
-        private void OnEnable()
+        private void Start()
         {
             _button.onClick.AddListener(OnGetLatestBlockLevelButtonClicked);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _button.onClick.RemoveListener(OnGetLatestBlockLevelButtonClicked);
         }

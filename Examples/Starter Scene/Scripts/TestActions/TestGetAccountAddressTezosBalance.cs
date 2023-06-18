@@ -2,27 +2,26 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
-    public class TestGetOthersTezosBalance : MonoBehaviour
+    public class TestGetAccountAddressTezosBalance : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private Button _button;
-
+        [Header("References")] 
+        [SerializeField] private Button _button;
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private TMP_InputField _inputField;
 
-        private void OnEnable()
+        private void Start()
         {
-            _button.onClick.AddListener(OnGetOthersTezosBalanceButtonClicked);
+            _button.onClick.AddListener(OnGetAccountAddressTezosBalanceButtonClicked);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnGetOthersTezosBalanceButtonClicked);
+            _button.onClick.RemoveListener(OnGetAccountAddressTezosBalanceButtonClicked);
         }
 
-        private void OnGetOthersTezosBalanceButtonClicked()
+        private void OnGetAccountAddressTezosBalanceButtonClicked()
         {
             _button.interactable = false;
             _resultText.text = "Pending...";

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class UIHyperlinkButton : MonoBehaviour
     {

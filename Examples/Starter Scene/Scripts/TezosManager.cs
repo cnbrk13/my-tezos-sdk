@@ -9,6 +9,7 @@ using Scripts.Helpers;
 using Scripts.Tezos;
 using Scripts.Tezos.API;
 using Scripts.Tezos.Wallet;
+using Tezos.Contracts;
 using Logger = Scripts.Helpers.Logger;
 
 public class TezosManager : MonoBehaviour
@@ -27,27 +28,15 @@ public class TezosManager : MonoBehaviour
     public ITezosDataAPI API { get; private set; }
     public IBeaconConnector BeaconConnector { get; private set; }
     //public IWalletProvider Wallet { get; private set; }
+    
+    public FA12 FA12 { get; private set; }
+    public FA2 FA2 { get; private set; }
 
     private string _pubKey;
     private string _handshake = "";
     public string Handshake => _handshake;
     public string HandshakeURI => "tezos://?type=tzip10&data=" + _handshake;
 
-    private bool _isConnected;
-    public Action<bool> OnIsConnectedChanged;
-    public bool IsConnected
-    {
-        get => _isConnected;
-        private set
-        {
-            if (_isConnected != value)
-            {
-                _isConnected = value;
-                OnIsConnectedChanged?.Invoke(value);
-            }
-        }
-    }
-    
     public static TezosManager Instance { get; private set; }
     
     private void Awake()
@@ -69,6 +58,8 @@ public class TezosManager : MonoBehaviour
         var dataProviderConfig = new TzKTProviderConfig();
         API = new TezosDataAPI(dataProviderConfig);
         //Wallet = new WalletProvider();
+        FA12 = new FA12(BeaconConnector, API);
+        FA2 = new FA2(BeaconConnector, API);
         
         InitBeaconConnector();
         
@@ -196,41 +187,34 @@ public class TezosManager : MonoBehaviour
     
     private void Callback_OnAccountConnected(string account)
     {
-        Debug.Log("AccountConnected: " + account);
         var json = JsonSerializer.Deserialize<JsonElement>(account);
         if (!json.TryGetProperty("accountInfo", out json)) return;
 
         _pubKey = json.GetProperty("publicKey").GetString();
-        IsConnected = true;
+        string accountAddress = json.GetProperty("address").GetString();
     }
     
     private void Callback_OnAccountConnectionFailed(string result)
     {
-        Debug.Log("AccountConnectionFailed: " + result);
     }
     
     private void Callback_OnAccountDisconnected(string result)
     {
-        Debug.Log("AccountDisconnected: " + result);
         _pubKey = "";
-        IsConnected = false;
     }
     
     private void Callback_OnHandshakeReceived(string handshake)
     {
-        Debug.Log("HandshakeReceived: " + handshake);
         _handshake = handshake;
     }
     
     private void Callback_OnPairingCompleted(string result)
     {
-        Debug.Log("PairingCompleted: " + result);
         BeaconConnector.RequestTezosPermission(networkName: TezosConfig.Instance.Network.ToString(), networkRPC: TezosConfig.Instance.RpcBaseUrl);
     }
     
     private void Callback_OnAccountReceived(string result)
     {
-        Debug.Log("AccountReceived: " + result);
     }
 
     #endregion

@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
-    public class TestDeployNFTContract : MonoBehaviour
+    public class TestDeployContract : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private Button _deployButton;
@@ -14,16 +14,13 @@ namespace Tezos.StarterSample
 
         [SerializeField] private TextMeshProUGUI _textContractAddress;
         [SerializeField] private Button _hyperlinkButtonContractAddress;
-
-        [SerializeField] private TestMintNFT _testMintNFT;
-        [SerializeField] private TestGetNFTs _testGetNFTs;
         
-        private void OnEnable()
+        private void Start()
         {
             _deployButton.onClick.AddListener(OnDeployNFTContractButtonClicked);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _deployButton.onClick.RemoveListener(OnDeployNFTContractButtonClicked);
         }
@@ -34,9 +31,6 @@ namespace Tezos.StarterSample
 
             _textTxnHash.text = "";
             _hyperlinkButtonTxnHash.interactable = false;
-
-            _textContractAddress.text = "";
-            _hyperlinkButtonContractAddress.interactable = false;
             
             // TODO:
         }

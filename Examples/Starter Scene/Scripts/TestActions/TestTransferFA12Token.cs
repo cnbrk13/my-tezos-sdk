@@ -4,37 +4,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
-    public class TestTransferToken : MonoBehaviour
+    public class TestTransferFA12Token : MonoBehaviour
     {
         [Header("References")] 
         [SerializeField] private Button _button;
         [SerializeField] private Button _hyperlinkButton;
+        [SerializeField] private TextMeshProUGUI _contractAddressText;
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private TMP_InputField _inputFieldAddress;
         [SerializeField] private TMP_InputField _inputFieldAmount;
 
-        private void OnEnable()
+        private void Start()
         {
-            _button.onClick.AddListener(OnTransferTokenButtonClicked);
+            _button.onClick.AddListener(OnTransferFA12TokenButtonClicked);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnTransferTokenButtonClicked);
+            _button.onClick.RemoveListener(OnTransferFA12TokenButtonClicked);
         }
 
-        private void OnTransferTokenButtonClicked()
+        private void OnTransferFA12TokenButtonClicked()
         {
             _resultText.text = "Requested.";
             _hyperlinkButton.interactable = false;
 
-            string toAddress = _inputFieldAddress.text;
-            ulong amount = ulong.Parse(_inputFieldAmount.text);
-
-            TezosManager.Instance.MessageReceiver.ContractCallInjected += OnContractCallInjected;
-            TezosManager.Instance.RequestTransferTezos(toAddress, amount);
+            // TODO:
         }
         
         private void OnContractCallInjected(string transaction)

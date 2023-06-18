@@ -4,30 +4,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class TestMintNFT : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private Button _button;
+        [SerializeField] private TextMeshProUGUI _contractAddressText;
         [SerializeField] private TextMeshProUGUI _textTxnHash;
         [SerializeField] private Button _hyperlinkButton;
-        [Header("Properties")]
-        [SerializeField] private string _contractAddress = "KT1WguzxyLmuKbJhz3jNuoRzzaUCncfp6PFE";
         
-        private void OnEnable()
+        private void Start()
         {
             _button.onClick.AddListener(OnMintNFTButtonClicked);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _button.onClick.RemoveListener(OnMintNFTButtonClicked);
-        }
-
-        public void ChangeNFTContractAddress(string newAddress)
-        {
-            _contractAddress = newAddress;
         }
         
         private void OnMintNFTButtonClicked()
@@ -40,7 +34,7 @@ namespace Tezos.StarterSample
             string input = "{\"prim\": \"Unit\"}";
 
             TezosManager.Instance.MessageReceiver.ContractCallInjected += OnContractCallInjected;
-            TezosManager.Instance.CallContract(_contractAddress, entrypoint, input, 0);
+            TezosManager.Instance.CallContract(_contractAddressText.text, entrypoint, input, 0);
             
         }
 

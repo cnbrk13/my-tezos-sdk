@@ -5,7 +5,7 @@ using ZXing;
 using ZXing.QrCode;
 using Logger = Scripts.Helpers.Logger;
 
-namespace Tezos.StarterSample
+namespace Tezos.StarterScene
 {
     public class StarterQRCodeSetter : MonoBehaviour
     {
