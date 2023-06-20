@@ -5,10 +5,10 @@ namespace Tezos.Contracts
 {
     public class ContractBase
     {
-        public IBeaconConnector BeaconConnector { get; private set; }
-        public ITezosDataAPI API { get; private set; }
+        protected IBeaconConnector BeaconConnector { get; private set; }
+        protected ITezosDataAPI API { get; private set; }
 
-        public ContractBase(IBeaconConnector beaconConnector, ITezosDataAPI api)
+        protected ContractBase(IBeaconConnector beaconConnector, ITezosDataAPI api)
         {
             BeaconConnector = beaconConnector;
             API = api;

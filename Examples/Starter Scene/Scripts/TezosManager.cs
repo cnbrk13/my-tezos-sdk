@@ -29,8 +29,7 @@ public class TezosManager : MonoBehaviour
     public IBeaconConnector BeaconConnector { get; private set; }
     //public IWalletProvider Wallet { get; private set; }
     
-    public FA12 FA12 { get; private set; }
-    public FA2 FA2 { get; private set; }
+    public Contracts Contracts { get; private set; }
 
     private string _pubKey;
     private string _handshake = "";
@@ -40,7 +39,7 @@ public class TezosManager : MonoBehaviour
     public static TezosManager Instance { get; private set; }
     
     private void Awake()
-    { 
+    {
         // Single persistent instance check
         if (Instance != null && Instance != this)
         {
@@ -58,8 +57,7 @@ public class TezosManager : MonoBehaviour
         var dataProviderConfig = new TzKTProviderConfig();
         API = new TezosDataAPI(dataProviderConfig);
         //Wallet = new WalletProvider();
-        FA12 = new FA12(BeaconConnector, API);
-        FA2 = new FA2(BeaconConnector, API);
+        Contracts = new Contracts(BeaconConnector, API);
         
         InitBeaconConnector();
         

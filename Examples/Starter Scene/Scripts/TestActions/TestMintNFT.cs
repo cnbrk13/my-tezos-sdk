@@ -35,7 +35,6 @@ namespace Tezos.StarterScene
 
             TezosManager.Instance.MessageReceiver.ContractCallInjected += OnContractCallInjected;
             TezosManager.Instance.CallContract(_contractAddressText.text, entrypoint, input, 0);
-            
         }
 
         private void OnContractCallInjected(string transaction)
