@@ -1,16 +1,24 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text.Json;
+using Netezos.Encoding;
+using Netezos.Encoding.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Tezos.StarterScene
 {
-    public class TestTransferTezos : MonoBehaviour
+    public class TestFA2TransferToken : MonoBehaviour
     {
         [Header("References")] 
         [SerializeField] private Button _button;
         [SerializeField] private Button _hyperlinkButton;
+        [SerializeField] private TextMeshProUGUI _contractAddressText;
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private TMP_InputField _inputFieldAddress;
         [SerializeField] private TMP_InputField _inputFieldAmount;
@@ -30,11 +38,13 @@ namespace Tezos.StarterScene
             _resultText.text = "Requested.";
             _hyperlinkButton.interactable = false;
 
-            string toAddress = _inputFieldAddress.text;
-            ulong amount = ulong.Parse(_inputFieldAmount.text);
-
+            var sender = TezosManager.Instance.GetActiveAddress();
+            const string entrypoint = "transfer";
+            
+            string input = "{ \"data\" : [ { \"prim\": \"Pair\", \"args\": [ { \"string\": \"" + sender + "\" }, [ { \"prim\": \"Pair\", \"args\": [ { \"string\": \"" + _inputFieldAddress.text + "\" }, { \"prim\": \"Pair\", \"args\": [ { \"int\": \"" + 0 + "\" }, { \"int\": \"" + _inputFieldAmount.text + "\" } ] } ] } ] ] } ] }";
+            
             TezosManager.Instance.MessageReceiver.ContractCallInjected += OnContractCallInjected;
-            TezosManager.Instance.RequestTransferTezos(toAddress, amount);
+            TezosManager.Instance.CallContract(_contractAddressText.text, entrypoint, input, 0);
         }
         
         private void OnContractCallInjected(string transaction)

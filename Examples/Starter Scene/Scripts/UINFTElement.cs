@@ -10,6 +10,18 @@ namespace Tezos.StarterScene
         public string amount { get; set; }
         public ContractItem item { get; set; }
     }
+
+    public struct NFTMetadata
+    {
+        public string token_id { get; set; }
+        public TokenInfo token_info { get; set; }
+    }
+    
+    public struct TokenInfo
+    {
+        public string artifactUri { get; set; }
+    
+    }
     
     public struct ContractItem
     {
@@ -32,6 +44,11 @@ namespace Tezos.StarterScene
         {
             _idText.text = "ID: " + nftData.id;
             _amountText.text = "Amount: " + nftData.amount;
+        }
+
+        public void InitNFTMetadata(string uri)
+        {
+            //StartCoroutine(IPFSImageDownloader.DownloadAndSetImageTexture(uri, _nftImage));
         }
     }
 }

@@ -17,15 +17,15 @@ namespace Tezos.StarterScene
         
         private void Start()
         {
-            _deployButton.onClick.AddListener(OnDeployNFTContractButtonClicked);
+            _deployButton.onClick.AddListener(OnButtonClicked);
         }
 
         private void OnDestroy()
         {
-            _deployButton.onClick.RemoveListener(OnDeployNFTContractButtonClicked);
+            _deployButton.onClick.RemoveListener(OnButtonClicked);
         }
 
-        private void OnDeployNFTContractButtonClicked()
+        private void OnButtonClicked()
         {
             _deployButton.interactable = false;
 

@@ -16,21 +16,21 @@ namespace Tezos.StarterScene
 
         private void Start()
         {
-            _button.onClick.AddListener(OnSignMessageButtonClicked);
+            _button.onClick.AddListener(OnButtonClicked);
             TezosManager.Instance.MessageReceiver.PayloadSigned += OnMessageSigned;
         }
 
         private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnSignMessageButtonClicked);
+            _button.onClick.RemoveListener(OnButtonClicked);
             TezosManager.Instance.MessageReceiver.PayloadSigned -= OnMessageSigned;
         }
 
-        private void OnSignMessageButtonClicked()
+        private void OnButtonClicked()
         {
             _resultText.text = "";
 
-            TezosManager.Instance.RequestSignPayload(SignPayloadType.raw, _inputField.text);
+            TezosManager.Instance.RequestSignPayload(SignPayloadType.micheline, _inputField.text);
         }
 
         private void OnMessageSigned(string result)

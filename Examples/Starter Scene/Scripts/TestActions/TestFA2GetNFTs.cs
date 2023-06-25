@@ -1,3 +1,8 @@
+using System;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
 using Scripts.Helpers;
 using Scripts.Tezos;
 using TMPro;
@@ -6,7 +11,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace Tezos.StarterScene
 {
-    public class TestGetNFTs : MonoBehaviour
+    public class TestFA2GetNFTs : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private Button _button;
@@ -17,15 +22,15 @@ namespace Tezos.StarterScene
         
         private void Start()
         {
-            _button.onClick.AddListener(OnGetNFTsButtonClicked);
+            _button.onClick.AddListener(OnButtonClicked);
         }
 
         private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnGetNFTsButtonClicked);
+            _button.onClick.RemoveListener(OnButtonClicked);
         }
         
-        private void OnGetNFTsButtonClicked()
+        private void OnButtonClicked()
         {
             _button.interactable = false;
             _resultText.text = "Pending...";
@@ -71,6 +76,40 @@ namespace Tezos.StarterScene
                 {
                     UINFTElement uinftElement = Instantiate(_nftElementPrefab, _trContent).GetComponent<UINFTElement>();
                     uinftElement.InitNFT(nftData);
+                    if (nftData.id == "0")
+                    {
+                        const string entrypoint = "token_metadata";
+                        var input = new {@int = nftData.id};
+                        string contractAddress = _contractAddressText.text;
+                        CoroutineRunner.Instance.StartWrappedCoroutine(
+                            TezosManager.Instance.API.ReadView(
+                                contractAddress: contractAddress,
+                                entrypoint: entrypoint,
+                                input: input,
+                                callback: result =>
+                                {
+                                    JObject parsedJson = JObject.Parse(result.ToString());
+                                    JArray elements = (JArray)parsedJson["args"][1];
+        
+                                    foreach (JObject element in elements)
+                                    {
+                                        if ((string)element["args"][0]["string"] == "artifactUri")
+                                        {
+                                            string artifactUriBytesHex = (string)element["args"][1]["bytes"];
+                                            artifactUriBytesHex = artifactUriBytesHex.Substring(12); // Removing the prefix
+                                            byte[] artifactUriBytes = Enumerable.Range(0, artifactUriBytesHex.Length)
+                                                .Where(x => x % 2 == 0)
+                                                .Select(x => Convert.ToByte(artifactUriBytesHex.Substring(x, 2), 16))
+                                                .ToArray();
+                
+                                            string artifactUri = Encoding.ASCII.GetString(artifactUriBytes);
+                                            uinftElement.InitNFTMetadata(artifactUri);
+                                            Debug.Log("Token 0 Artifact Uri: " + artifactUri);
+                                            break;
+                                        }
+                                    }
+                                }));
+                    }
                 }
             }
         }

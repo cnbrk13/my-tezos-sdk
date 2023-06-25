@@ -1,39 +1,45 @@
 using System.Collections;
 using System.Text.Json;
+using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Tezos.StarterScene
 {
-    public class TestTransferFA12Token : MonoBehaviour
+    public class TestFA2MintNFT : MonoBehaviour
     {
-        [Header("References")] 
+        [Header("References")]
         [SerializeField] private Button _button;
-        [SerializeField] private Button _hyperlinkButton;
         [SerializeField] private TextMeshProUGUI _contractAddressText;
-        [SerializeField] private TextMeshProUGUI _resultText;
-        [SerializeField] private TMP_InputField _inputFieldAddress;
-        [SerializeField] private TMP_InputField _inputFieldAmount;
-
+        [SerializeField] private TextMeshProUGUI _textTxnHash;
+        [SerializeField] private Button _hyperlinkButton;
+        
         private void Start()
         {
-            _button.onClick.AddListener(OnTransferFA12TokenButtonClicked);
+            _button.onClick.AddListener(OnButtonClicked);
         }
 
         private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnTransferFA12TokenButtonClicked);
-        }
-
-        private void OnTransferFA12TokenButtonClicked()
-        {
-            _resultText.text = "Requested.";
-            _hyperlinkButton.interactable = false;
-
-            // TODO:
+            _button.onClick.RemoveListener(OnButtonClicked);
         }
         
+        private void OnButtonClicked()
+        {
+            _button.interactable = true;
+            _textTxnHash.text = "Requested.";
+            _hyperlinkButton.interactable = false;
+            
+            string entrypoint = "mint";
+            string input = "{\"prim\": \"Unit\"}";
+            JObject obj = new JObject();
+            obj["data"] = JObject.Parse(input);
+            string newInput = obj.ToString();
+            TezosManager.Instance.MessageReceiver.ContractCallInjected += OnContractCallInjected;
+            TezosManager.Instance.CallContract(_contractAddressText.text, entrypoint, newInput, 0);
+        }
+
         private void OnContractCallInjected(string transaction)
         {
             TezosManager.Instance.MessageReceiver.ContractCallInjected -= OnContractCallInjected;
@@ -43,16 +49,16 @@ namespace Tezos.StarterScene
             {
                 if (result.success)
                 {
-                    _resultText.text = result.transactionHash;
+                    _textTxnHash.text = result.transactionHash;
                     _hyperlinkButton.interactable = true;
                 }
                 else
                 {
-                    _resultText.text = "Failed.";
+                    _textTxnHash.text = "Failed.";
                 }
             });
             TezosManager.Instance.StartCoroutine(routine);
-            _resultText.text = "Pending...";
+            _textTxnHash.text = "Pending...";
         }
     }
 }

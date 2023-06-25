@@ -13,15 +13,15 @@ namespace Tezos.StarterScene
 
         private void Start()
         {
-            _button.onClick.AddListener(OnGetYourTezosBalanceButtonClicked);
+            _button.onClick.AddListener(OnButtonClicked);
         }
 
         private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnGetYourTezosBalanceButtonClicked);
+            _button.onClick.RemoveListener(OnButtonClicked);
         }
 
-        private void OnGetYourTezosBalanceButtonClicked()
+        private void OnButtonClicked()
         {
             _resultText.text = "Pending...";
 

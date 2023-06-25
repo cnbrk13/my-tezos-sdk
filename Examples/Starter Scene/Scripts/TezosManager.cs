@@ -1,15 +1,20 @@
 using System;
 using System.Collections;
+using System.IO;
 using UnityEngine;
 using System.Text.Json;
+using Beacon.Sdk;
 using Beacon.Sdk.Beacon.Sign;
+using Beacon.Sdk.BeaconClients;
 using BeaconSDK;
+using Newtonsoft.Json.Linq;
 using Scripts.BeaconSDK;
 using Scripts.Helpers;
 using Scripts.Tezos;
 using Scripts.Tezos.API;
 using Scripts.Tezos.Wallet;
 using Tezos.Contracts;
+using Tezos.StarterScene;
 using Logger = Scripts.Helpers.Logger;
 
 public class TezosManager : MonoBehaviour
@@ -18,7 +23,7 @@ public class TezosManager : MonoBehaviour
     public string appName = "Starter Sample";
     public string appDescription = "Tezos Starter Sample";
     public string appUrl = "https://tezos.com";
-    public string[] appIcons = new string[] { "https://tezos.com/favicon.ico" };
+    public string appIcon = "https://tezos.com/favicon.ico";
 
     [Header("Storage Options")]
     [Tooltip("IPFS Gateway Override")]
@@ -57,9 +62,9 @@ public class TezosManager : MonoBehaviour
         var dataProviderConfig = new TzKTProviderConfig();
         API = new TezosDataAPI(dataProviderConfig);
         //Wallet = new WalletProvider();
-        Contracts = new Contracts(BeaconConnector, API);
         
         InitBeaconConnector();
+        Contracts = new Contracts(BeaconConnector, API);
         
         MessageReceiver.AccountConnected += Callback_OnAccountConnected;
         MessageReceiver.AccountConnectionFailed += Callback_OnAccountConnectionFailed;
@@ -74,8 +79,9 @@ public class TezosManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
 		BeaconConnector = new BeaconConnectorWebGl();
 #else
-        BeaconConnector = new BeaconConnectorDotNet();
-        (BeaconConnector as BeaconConnectorDotNet)?.SetWalletMessageReceiver(MessageReceiver);
+        BeaconConnector = new StarterBeaconConnectorDotNet();
+        (BeaconConnector as StarterBeaconConnectorDotNet)?.SetWalletMessageReceiver(MessageReceiver);
+        
         Connect(WalletProviderType.beacon, withRedirectToWallet: false);
 #endif
         
@@ -88,7 +94,18 @@ public class TezosManager : MonoBehaviour
             rpc: TezosConfig.Instance.RpcBaseUrl,
             walletProviderType: walletProvider);
 
-        BeaconConnector.ConnectAccount();
+        var pathToDb = Path.Combine(Application.persistentDataPath, "beacon.db");
+        Logger.LogDebug($"DB file stored in {pathToDb}");
+        
+        var options = new BeaconOptions
+        {
+            AppName = appName,
+            AppUrl = appUrl,
+            IconUrl = appIcon,
+            KnownRelayServers = Constants.KnownRelayServers,
+            DatabaseConnectionString = $"Filename={pathToDb};Connection=direct;Upgrade=true"
+        };
+        (BeaconConnector as StarterBeaconConnectorDotNet)?.SetBeaconOptionsAndConnect(options);
 #if UNITY_ANDROID || UNITY_IOS
             if (withRedirectToWallet)
                 Application.OpenURL($"tezos://?type=tzip10&data={_handshake}");
@@ -122,10 +139,14 @@ public class TezosManager : MonoBehaviour
     
     public void RequestTransferTezos(string to, ulong amount = 0)
     {
+        string input = "{\"prim\": \"Unit\"}";
+        JObject obj = new JObject();
+        obj["data"] = JObject.Parse(input);
+        string newInput = obj.ToString();
         BeaconConnector.RequestTezosOperation(
             destination: to,
             entryPoint: "default",
-            arg: "{\"prim\": \"Unit\"}",
+            arg: newInput,
             amount: amount,
             networkName: TezosConfig.Instance.Network.ToString(),
             networkRPC: TezosConfig.Instance.RpcBaseUrl);

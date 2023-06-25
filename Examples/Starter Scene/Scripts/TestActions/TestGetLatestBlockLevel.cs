@@ -12,15 +12,15 @@ namespace Tezos.StarterScene
 
         private void Start()
         {
-            _button.onClick.AddListener(OnGetLatestBlockLevelButtonClicked);
+            _button.onClick.AddListener(OnButtonClicked);
         }
 
         private void OnDestroy()
         {
-            _button.onClick.RemoveListener(OnGetLatestBlockLevelButtonClicked);
+            _button.onClick.RemoveListener(OnButtonClicked);
         }
 
-        private void OnGetLatestBlockLevelButtonClicked()
+        private void OnButtonClicked()
         {
             _resultText.text = "Pending...";
             
