@@ -18,7 +18,6 @@ namespace Tezos.Contracts
     {
         void Mint(string contractAddress, string address, uint tokenId, uint amount);
         void Transfer(string contractAddress, string fromAddress, string toAddress, decimal amount);
-        void UpdateOperators(string contractAddress, string operatorAddress, string owner, uint tokenId, bool add);
         IEnumerator BalanceOf(string contractAddress, string owner, uint tokenId, Action<JsonElement> callback);
     }
 
@@ -32,7 +31,6 @@ namespace Tezos.Contracts
         public void Mint(string contractAddress, string address, uint tokenId, uint amount)
         {
             const string entryPoint = "mint";
-            //string input = "{\"prim\": \"Unit\"}";
             var input = new MichelinePrim
             {
                 Prim = PrimType.Pair,
@@ -58,22 +56,6 @@ namespace Tezos.Contracts
             const string entryPoint = "transfer";
             string input = $"{{\"prim\": \"Pair\", \"args\": [{{\"string\": \"{fromAddress}\"}}, {{\"string\": \"{toAddress}\"}}, {amount}]}}";
     
-            BeaconConnector.RequestTezosOperation(
-                destination: contractAddress,
-                entryPoint: entryPoint,
-                arg: input,
-                amount: 0,
-                networkName: TezosConfig.Instance.Network.ToString(),
-                networkRPC: TezosConfig.Instance.RpcBaseUrl);
-        }
-        
-        public void UpdateOperators(string contractAddress, string operatorAddress, string owner, uint tokenId, bool add)
-        {
-            const string entryPoint = "update_operators";
-            string action = add ? "add_operator" : "remove_operator";
-
-            string input = $"{{\"prim\": \"Pair\", \"args\": [{{\"string\": \"{action}\"}}, {{\"prim\": \"Pair\", \"args\": [{{\"string\": \"{operatorAddress}\"}}, {{\"prim\": \"Pair\", \"args\": [{{\"string\": \"{owner}\"}}, {{\"int\": \"{tokenId}\"}}]}}]}}]}}";
-
             BeaconConnector.RequestTezosOperation(
                 destination: contractAddress,
                 entryPoint: entryPoint,
