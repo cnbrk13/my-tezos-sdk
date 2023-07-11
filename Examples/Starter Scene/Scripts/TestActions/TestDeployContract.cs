@@ -32,7 +32,7 @@ namespace Tezos.StarterScene
             _textTxnHash.text = "";
             _hyperlinkButtonTxnHash.interactable = false;
             
-            // TODO:
+            // TODO: Request operation to deploy the contract.
         }
     }
 }

@@ -11,6 +11,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace Tezos.StarterScene
 {
+    //TODO: Uses the Inventory Sample Game contract to showcase functionality. After the FA2 branch is merged into the main branch, use the FA2 wrapper instead.
     public class TestFA2GetNFTs : MonoBehaviour
     {
         [Header("References")]
@@ -104,7 +105,6 @@ namespace Tezos.StarterScene
                 
                                             string artifactUri = Encoding.ASCII.GetString(artifactUriBytes);
                                             uinftElement.InitNFTMetadata(artifactUri);
-                                            Debug.Log("Token 0 Artifact Uri: " + artifactUri);
                                             break;
                                         }
                                     }
