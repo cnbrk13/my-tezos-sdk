@@ -45,6 +45,4 @@ namespace TezosSDK.Tezos
 			Tezos = new Tezos(DAppMetadata);
 		}
 	}
-	
-
 }

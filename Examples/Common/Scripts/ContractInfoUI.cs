@@ -17,12 +17,12 @@ namespace TezosSDK.Contract.Scripts
             addressText.text = NotConnectedText;
         }
 
-        private void OnAccountDisconnected(AccountInfo account_info)
+        private void OnAccountDisconnected(AccountInfo accountInfo)
         {
             addressText.text = NotConnectedText;
         }
 
-        private void OnAccountConnected(AccountInfo account_info)
+        private void OnAccountConnected(AccountInfo accountInfo)
         {
             addressText.text = TezosManager
                 .Instance
