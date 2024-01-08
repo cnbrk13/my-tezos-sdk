@@ -31,7 +31,7 @@ jobs:
 
       - name: Create unitypackageFiles
         run: |
-          echo "Assets/TezosUnitySdk.meta" > unitypackageFiles
+          echo "./Assets/TezosUnitySdk.meta" > unitypackageFiles
           mv Assets/TezosUnitySdk/Samples~ Assets/TezosUnitySdk/Samples
           find ./Assets/TezosUnitySdk/ -name \*.meta ! -path "./Assets/TezosUnitySdk/Tests*" ! -path "./Assets/TezosUnitySdk/*.md.meta" >> unitypackageFiles
 
