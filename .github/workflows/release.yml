@@ -35,8 +35,8 @@ jobs:
           mv Assets/TezosUnitySdk/Samples~ Assets/TezosUnitySdk/Samples
           find ./Assets/TezosUnitySdk/ -name \*.meta ! -path "./Assets/TezosUnitySdk/Tests*" ! -path "./Assets/TezosUnitySdk/*.md.meta" >> unitypackageFiles
 
-      - name: List directory structure
-        run: ls -lR
+      - name: Print contents of unitypackageFiles
+        run: cat unitypackageFiles
         
       - name: Create unitypackage
         uses: pCYSl5EDgo/create-unitypackage@master
