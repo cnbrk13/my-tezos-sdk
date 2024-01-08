@@ -39,7 +39,7 @@ jobs:
         run: cat unitypackageFiles
         
       - name: Create unitypackage
-        uses: pCYSl5EDgo/create-unitypackage@master
+        uses: cnbrk13/my-create-unitypackage@master
         with:
           package-path: 'TezosUnitySdk.unitypackage'
           include-files: unitypackageFiles
