@@ -209,7 +209,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added auto releases with GH actions
 
 
-[unreleased]: https://github.com/trilitech/tezos-unity-sdk/compare/3.1.2...HEAD
+[unreleased]: https://github.com/trilitech/tezos-unity-sdk/compare/3.1.3...HEAD
 [2.0.7]: https://github.com/trilitech/tezos-unity-sdk/releases/tag/2.0.7
 [2.0.6]: https://github.com/trilitech/tezos-unity-sdk/releases/tag/2.0.6
 [2.0.5]: https://github.com/trilitech/tezos-unity-sdk/releases/tag/2.0.5
