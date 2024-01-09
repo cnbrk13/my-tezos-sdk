@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Unity project structure
         uses: actions/checkout@v2
         with:
-          repository: trilitech/tezos-unity-sdk-structured
+          repository: cnbrk13/my-structured
 
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -31,22 +31,17 @@ jobs:
 
       - name: Create unitypackageFiles
         run: |
-          echo "Assets/TezosUnitySdk.meta" > unitypackageFiles
-          mv Assets/TezosUnitySdk/Samples~ Assets/TezosUnitySdk/Samples
+          echo "./Assets/TezosUnitySdk.meta" > unitypackageFiles
           find ./Assets/TezosUnitySdk/ -name \*.meta ! -path "./Assets/TezosUnitySdk/Tests*" ! -path "./Assets/TezosUnitySdk/*.md.meta" >> unitypackageFiles
 
+      - name: Print contents of unitypackageFiles
+        run: cat unitypackageFiles
+        
       - name: Create unitypackage
-        uses: pCYSl5EDgo/create-unitypackage@master
+        uses: cnbrk13/my-create-unitypackage@master
         with:
           package-path: 'TezosUnitySdk.unitypackage'
           include-files: unitypackageFiles
-
-      - name: Parse changelog
-        id: changelog
-        uses: mindsers/changelog-reader-action@v2
-        with:
-          path: ./Assets/TezosUnitySdk/CHANGELOG.md
-          version: ${{ github.ref_name }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
