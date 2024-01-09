@@ -43,6 +43,13 @@ jobs:
           package-path: 'TezosUnitySdk.unitypackage'
           include-files: unitypackageFiles
 
+      - name: Parse changelog
+        id: changelog
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          path: ./Assets/TezosUnitySdk/CHANGELOG.md
+          version: ${{ github.ref_name }}
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
