@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Get the current branch
         id: get-branch
         run: echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD)"
