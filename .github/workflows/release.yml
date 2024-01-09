@@ -8,18 +8,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Get the current branch
-        id: get-branch
-        run: echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD)"
-      - name: Check if on release branch
-        if: steps.get-branch.outputs.branch != 'release'
-        run: |
-          echo "This tag is not on the release branch. Exiting."
-          exit 1
       - name: Log statement
         run: |
           echo "The workflow is running on a tag in the release branch."
