@@ -1,57 +1,25 @@
 name: Release
+
 on:
   push:
     tags:
-      - "*.*.*"
+      - '*.*.*'
 
 jobs:
   release:
-    name: Release
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Unity project structure
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          repository: cnbrk13/my-structured
 
-      - name: Check out the repo
-        uses: actions/checkout@v3
-        with:
-          path: Assets/TezosUnitySdk
-
-      - name: Archive Release
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: "zip"
-          directory: ./Assets/TezosUnitySdk/
-          filename: "tezos-unity-sdk.zip"
-          exclusions: "*.git* *.github*"
-
-      - name: Create unitypackageFiles
+      - name: Get the current branch
+        id: get-branch
+        run: echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD)"
+      - name: Check if on release branch
+        if: steps.get-branch.outputs.branch != 'release'
         run: |
-          echo "./Assets/TezosUnitySdk.meta" > unitypackageFiles
-          find ./Assets/TezosUnitySdk/ -name \*.meta ! -path "./Assets/TezosUnitySdk/Tests*" ! -path "./Assets/TezosUnitySdk/*.md.meta" >> unitypackageFiles
-
-      - name: Print contents of unitypackageFiles
-        run: cat unitypackageFiles
-        
-      - name: Create unitypackage
-        uses: cnbrk13/my-create-unitypackage@master
-        with:
-          package-path: 'TezosUnitySdk.unitypackage'
-          include-files: unitypackageFiles
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ steps.changelog.outputs.version }}
-          tag_name: ${{ github.ref_name }}
-          body: |
-            ## ${{ steps.changelog.outputs.date }}
-            ${{ steps.changelog.outputs.changes }}
-          prerelease: ${{ steps.changelog.outputs.status == 'prereleased' }}
-          files: |
-            ./Assets/TezosUnitySdk/tezos-unity-sdk.zip
-            TezosUnitySdk.unitypackage
+          echo "This tag is not on the release branch. Exiting."
+          exit 1
+      - name: Log statement
+        run: |
+          echo "The workflow is running on a tag in the release branch."
