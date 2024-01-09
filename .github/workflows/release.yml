@@ -34,11 +34,8 @@ jobs:
           echo "./Assets/TezosUnitySdk.meta" > unitypackageFiles
           find ./Assets/TezosUnitySdk/ -name \*.meta ! -path "./Assets/TezosUnitySdk/Tests*" ! -path "./Assets/TezosUnitySdk/*.md.meta" >> unitypackageFiles
 
-      - name: Print contents of unitypackageFiles
-        run: cat unitypackageFiles
-        
       - name: Create unitypackage
-        uses: cnbrk13/my-create-unitypackage@master
+        uses: pCYSl5EDgo/create-unitypackage@master
         with:
           package-path: 'TezosUnitySdk.unitypackage'
           include-files: unitypackageFiles
