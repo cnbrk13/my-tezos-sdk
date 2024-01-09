@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+## [3.1.4] - 2023-09-01
 ### Added
 - Tutorial scenes within `Tutorials` folder, offering step-by-step guidance on SDK features.
 - Centralized event management system `WalletEventManager.cs` for uniform event handling.
