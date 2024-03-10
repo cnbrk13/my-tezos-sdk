@@ -1,0 +1,14 @@
+name: Enforce PR Branch Policy
+
+on: pull_request
+
+jobs:
+  check-base-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Base Branch
+        run: |
+          if [ "${{ github.base_ref }}" != "develop" ]; then
+            echo "Error: PRs must target the 'develop' branch."
+            exit 1
+          fi
